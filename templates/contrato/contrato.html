@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+
+{% block title %}Contratos - GDC admin {% endblock %}
+
+{% load bootstrap_icons %}
+
+{% block content %}
+
+<div class="card-body">
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <i class="fas fa-table me-1"></i>
+            Contratos
+        </div>
+    </div>
+    <table id="example" class="table table-striped" style="width:100%">
+    <thead>
+        <tr>
+            <th>Nome da empresa</th>
+            <th>Contrato</th>
+            <th>Processo</th>
+            <th>Status</th>
+            <th>Gestor</th>
+            <th>Data de assinatura</th>
+            <th>Data de termino</th>
+            <th>Valor</th>
+            <th>Editar</th>
+        </tr>
+    </thead>
+    <tbody>
+        
+        {% for contrato in dados %}
+        
+        <tr>
+            <td>{{contrato.empresa}}</td>
+            <td><a href="" data-bs-toggle="modal" data-bs-target="#myModal_{{ forloop.counter }}">{{contrato.contrato}}</a></td>
+            <td> {{contrato.numero_de_processo}}</td>
+            <td>{{contrato.status}}</td>
+            <td>{{contrato.servidor_gestor.nome}}</td>
+            <td>{{contrato.data_assinatura}}</td>
+            <td>{{contrato.data_termino}}</td>
+            <td>R$ {{contrato.valor}}</td>
+            <td><button type="button" class="btn btn-primary">{% bs_icon 'pencil' %}</i></button></td>
+        </tr>
+        <!-- The Modal -->
+        <div class="modal" id="myModal_{{forloop.counter}}">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                
+                        <!-- Modal Header -->
+                        <div class="modal-header">
+                            <h4 class="modal-title">Detalhes do contrato</h4>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                
+                        <!-- Modal body -->
+                        <div class="modal-body">
+                            <span><h6>Objeto: </h6>{{contrato.objeto}}</span>
+                            {%if contrato.observacao %}
+                            <hr>
+                            <span><h6>Obs.:</h6> {{contrato.observacao}}</span>
+                            {% endif %}
+                        </div>
+                
+                        <!-- Modal footer -->
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Fechar</button>
+                        </div>
+            
+                    </div>
+                </div>
+        </div>
+        {% endfor %}
+
+    </tbody>
+    <tfoot>
+        <tr>
+            <th>Nome da empresa</th>
+            <th>Contrato</th>
+            <th>Processo</th>
+            <th>Status</th>
+            <th>Gestor</th>
+            <th>Data de assinatura</th>
+            <th>Data de termino</th>
+            <th>Valor</th>
+            <th>Editar</th>
+        </tr>
+    </tfoot>
+</table>
+</div>
+{% endblock %}
