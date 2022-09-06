@@ -7,7 +7,8 @@
 {% block content %}
 
 <div class="card-body">
-
+    
+    <div class="card" style="padding: 10px;">
     <div class="card mb-4">
         <div class="card-header">
             <i class="fas fa-table me-1"></i>
@@ -41,7 +42,7 @@
             <td>{{contrato.data_assinatura}}</td>
             <td>{{contrato.data_termino}}</td>
             <td>R$ {{contrato.valor}}</td>
-            <td><button type="button" class="btn btn-primary">{% bs_icon 'pencil' %}</i></button></td>
+            <td><a href="detalhes_contrato/{{contrato.id}}"><button type="button" class="btn btn-primary" >{% bs_icon 'pencil' %}</i></button></a></td>
         </tr>
         <!-- The Modal -->
         <div class="modal" id="myModal_{{forloop.counter}}">
@@ -88,5 +89,6 @@
         </tr>
     </tfoot>
 </table>
+</div>
 </div>
 {% endblock %}

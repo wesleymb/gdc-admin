@@ -1,0 +1,239 @@
+{% extends 'base.html' %}
+
+{% block title %}Novo contrato - GDC admin {% endblock %}
+
+{% load bootstrap_icons %}
+
+
+{% block content %}
+<style>
+    form {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-gap: 5px;
+}
+
+label{
+    font-weight:bold
+}
+
+textarea {
+  width: 100%;
+  height: 100px;
+}
+
+
+</style>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script>
+    setTimeout(function() {
+        $('#sucesso').fadeOut('fast');
+    }, 5000); 
+
+    function definirSatus(status){
+        $(document).ready(function() {
+            $("#status_pagamento").val(status).change();
+        });
+
+    }
+
+</script>
+
+
+<div class="card-body" style="margin-bottom: 10px;">
+    {% if save %}
+    <div id="sucesso" class="alert alert-success" role="alert">
+        {{msg}} com sucesso!
+    </div>
+    
+    {% endif %}
+    <div style="padding-bottom: 45px;">
+        <a href="/contratos"><button type="button" class="btn btn-primary" >{% bs_icon 'arrow-return-left' %} Voltar</i></button></a>
+    </div>
+    <div class="card">
+        <div class="card mb-4">
+            <div class="card-header">
+                <i class="fas fa-table me-1"></i>
+                Contrato
+            </div>
+        </div>
+            <div class="card-body">
+                <form action="./{{id}}" method="POST">
+                {% csrf_token %}
+
+                {{ contrato.as_p }}
+            </div>
+            <div>
+                <button style="float: right" type="submit" class="btn btn-primary btn-block col-2">Salvar</button>
+            </div>
+            <br>
+        </form>
+            
+        <div class="card mb-4">
+            <div class="card-header">
+                <i class="fas fa-table me-1"></i>
+                    Pagamentos
+            </div>
+        </div>
+    <div style="padding-left: 10px;">    
+        <button type="button" class="btn btn-primary col-2" data-bs-toggle="modal" data-bs-target="#modalNovoPagamento">{% bs_icon 'plus-circle' %} Adicionar pagamento</button>
+    </div>
+    <br>
+    <div class="card-body">
+        <table id="example" class="table table-striped" style="width:100%">
+            <thead>
+                <tr>
+                    <th>Valor</th>
+                    <th>Data do vencimento</th>
+                    <th>Número do processo</th>
+                    <th>Status</th>
+                    <th>Editar</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+                {% for pagamento in pagamentos %}
+                
+                <tr>
+                    <td>R$ {{pagamento.valor}}</td>
+                    <td>{{pagamento.data_de_vencimento}}</td>
+                    <td>{{pagamento.numero_do_processo}}</td>
+                    <td>{{pagamento.status}}</td>
+                    <td>
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" onclick="definirSatus('{{pagamento.status}}')" data-bs-target="#myModal_{{ pagamento.id }}">{% bs_icon 'pencil' %}</button>
+                        <button type="button" class="btn btn-danger" data-bs-target="#modalApagarPagamento_{{pagamento.id}}" data-bs-toggle="modal">{% bs_icon 'trash' %}</button></a></td>
+                        
+                    </td>
+                </tr>
+                
+                <!-- The Modal -->
+                <div class="modal" id="myModal_{{pagamento.id}}">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                    
+                            <!-- Modal Header -->
+                            
+                            <div class="modal-header">
+                                <h4 class="modal-title">Detalhes do pagamento</h4>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                    
+                            <!-- Modal body -->
+                            <form action="" method="post">
+                                {% csrf_token %}
+                                <div class="modal-body">
+                                    <input type="hidden" name="id" value="{{pagamento.id}}">
+                                    <input type="hidden" name="id_contrato" value="{{pagamento.id_contrato}}">
+                                    <label for="valor">Valor:</label>
+                                    <input type="text" name="valor" id="valor" value="{{pagamento.valor}}" class="form-control">
+                                    <br>
+                                    <label for="data_de_vencimento">Data do vencimento:</label>
+                                    <input type="date" name="data_de_vencimento" id="data_de_vencimento" value="{{pagamento.data_de_vencimento|date:'Y-m-d'}}" class="form-control">
+                                    <br>
+                                    <label for="numero_do_processo">Número de processo:</label>
+                                    <input type="text" name="numero_do_processo" id="numero_do_processo" value="{{pagamento.numero_do_processo}}" class="form-control">
+                                    <br>
+                                    <label for="status">Status:</label>
+                                    <select id="status_pagamento" name="status" class="form-select" aria-label="Default select example">
+                                        <option value="PAGO">PAGO</option>
+                                        <option value="TRAMITANDO">TRAMITANDO</option>
+                                        <option value="EM ATRASO">EM ATRASO</option>
+                                    </select>
+                                </div>
+                                
+                                <!-- Modal footer -->
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Salvar</button>
+                                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Fechar</button>
+                                </div>
+                                
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                
+
+                <div class="modal" id="modalApagarPagamento_{{pagamento.id}}">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                    
+                            <!-- Modal Header -->
+                            
+                            <div class="modal-header">
+                                <h4 class="modal-title">Apagar pagamento</h4>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                    
+                            <!-- Modal body -->
+                            <div class="modal-body">
+                                <form action="" method="post">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="apagar_pagamento" value="{{pagamento.id}}">
+                                    <h5>Tem certeza que deseja apagar esse pagamento?</h5>
+                                    <br>
+                                    <h6>Valor: R$ {{pagamento.valor}} </h6>
+                                    <h6> Data: {{pagamento.data_de_vencimento}}</h6>
+                                    <h6> Processo: {{pagamento.numero_do_processo}}</h6>
+                                </div>
+                                
+                                <!-- Modal footer -->
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn-danger" data-bs-dismiss="modal">Apagar</button>
+                                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Fechar</button>
+                                </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                {% endfor %}
+
+                <div class="modal" id="modalNovoPagamento">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                    
+                            <!-- Modal Header -->
+                            
+                            <div class="modal-header">
+                                <h4 class="modal-title">Novo pagamento</h4>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                    
+                            <!-- Modal body -->
+                            <div class="modal-body">
+                                <form action="" method="post">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="novo_pagamento" value="{{pagamento.id_contrato}}">
+                                    {{form_pagamento.as_p}}
+                                    
+                                </div>
+                                
+                                <!-- Modal footer -->
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Salvar</button>
+                                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Fechar</button>
+                                </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </tbody>
+            <tfoot>
+                <tr>
+                    <th>Valor</th>
+                    <th>Data do vencimento</th>
+                    <th>Número do processo</th>
+                    <th>Status</th>
+                    <th>Editar</th>
+                </tr>
+            </tfoot>
+        </table>
+
+    </div>
+    </div>
+</div>
+{% endblock %}

@@ -11,7 +11,7 @@ class Contrato(models.Model):
     )
 
 
-    _id = models.AutoField(primary_key=True, auto_created=True)
+    id = models.AutoField(primary_key=True, auto_created=True)
     contrato = models.CharField(max_length=10, blank=False, null=False)
     numero_de_processo = models.CharField(max_length=50, db_column='numeroDeProcesso', blank=False, null=False)  # Field name made lowercase.
     objeto = models.CharField(max_length=100, blank=False, null=False)
