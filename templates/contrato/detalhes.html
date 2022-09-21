@@ -60,7 +60,7 @@ textarea {
             <div class="card-body">
                 <form action="./{{id}}" method="POST">
                 {% csrf_token %}
-
+                <input type="hidden" name="atulizar_contrato" value="{{id}}">
                 {{ contrato.as_p }}
             </div>
             <div>
@@ -100,7 +100,7 @@ textarea {
                     <td>{{pagamento.numero_do_processo}}</td>
                     <td>{{pagamento.status}}</td>
                     <td>
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" onclick="definirSatus('{{pagamento.status}}')" data-bs-target="#myModal_{{ pagamento.id }}">{% bs_icon 'pencil' %}</button>
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal_{{ pagamento.id }}">{% bs_icon 'pencil' %}</button>
                         <button type="button" class="btn btn-danger" data-bs-target="#modalApagarPagamento_{{pagamento.id}}" data-bs-toggle="modal">{% bs_icon 'trash' %}</button></a></td>
                         
                     </td>
@@ -122,23 +122,8 @@ textarea {
                             <form action="" method="post">
                                 {% csrf_token %}
                                 <div class="modal-body">
-                                    <input type="hidden" name="id" value="{{pagamento.id}}">
-                                    <input type="hidden" name="id_contrato" value="{{pagamento.id_contrato}}">
-                                    <label for="valor">Valor:</label>
-                                    <input type="text" name="valor" id="valor" value="{{pagamento.valor}}" class="form-control">
-                                    <br>
-                                    <label for="data_de_vencimento">Data do vencimento:</label>
-                                    <input type="date" name="data_de_vencimento" id="data_de_vencimento" value="{{pagamento.data_de_vencimento|date:'Y-m-d'}}" class="form-control">
-                                    <br>
-                                    <label for="numero_do_processo">Número de processo:</label>
-                                    <input type="text" name="numero_do_processo" id="numero_do_processo" value="{{pagamento.numero_do_processo}}" class="form-control">
-                                    <br>
-                                    <label for="status">Status:</label>
-                                    <select id="status_pagamento" name="status" class="form-select" aria-label="Default select example">
-                                        <option value="PAGO">PAGO</option>
-                                        <option value="TRAMITANDO">TRAMITANDO</option>
-                                        <option value="EM ATRASO">EM ATRASO</option>
-                                    </select>
+                                    <input type="hidden" name="atulizar_pagamento" value="{{pagamento.id}}">
+                                    {{pagamento.form_pagamento.as_p}}
                                 </div>
                                 
                                 <!-- Modal footer -->
@@ -193,7 +178,6 @@ textarea {
                 <div class="modal" id="modalNovoPagamento">
                     <div class="modal-dialog">
                         <div class="modal-content">
-                    
                             <!-- Modal Header -->
                             
                             <div class="modal-header">
@@ -203,9 +187,10 @@ textarea {
                     
                             <!-- Modal body -->
                             <div class="modal-body">
-                                <form action="" method="post">
+                                <form action="./{{id}}" method="post">
+                                    
                                     {% csrf_token %}
-                                    <input type="hidden" name="novo_pagamento" value="{{pagamento.id_contrato}}">
+                                    <input type="hidden" name="novo_pagamento" value="{{id}}">
                                     {{form_pagamento.as_p}}
                                     
                                 </div>
@@ -219,6 +204,8 @@ textarea {
                             </div>
                         </div>
                     </div>
+                    
+
                 </div>
 
             </tbody>

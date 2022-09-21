@@ -25,8 +25,7 @@ SECRET_KEY = 'django-insecure-%#5a+_4lnd&=vn&ce0$xe-f74!6sp0)i6o#&pt+5q1y84dnw6%
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.1.10']
-
+ALLOWED_HOSTS = ['192.168.1.12','127.0.0.1']
 
 # Application definition
 
@@ -43,6 +42,7 @@ INSTALLED_APPS = [
     'accounts',
     'setor',
     'pagamento',
+    'equipamento',
 ]
 
 MIDDLEWARE = [
@@ -134,3 +134,4 @@ LOGOUT_REDIRECT_URL = "login"
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+DATE_INPUT_FORMATS = '%Y-%m-%d'
